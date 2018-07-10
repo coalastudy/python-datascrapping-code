@@ -9,8 +9,8 @@ html = BeautifulSoup(raw, 'html.parser')
 
 infos = html.select('div.cds')
 
-choo = infos[0]
+first = infos[0]
 
-chootitle = choo.select('dt.title tooltip')[0]
+first_title = first.select_one('dt.title tooltip')
 
-print('/', chootitle.text, '/')
+print('/', first_title.text, '/')
