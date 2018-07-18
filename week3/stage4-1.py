@@ -13,9 +13,9 @@ infos = html.select('.cds_info')
 chnInfos = {}
 
 for info in infos:
-    chn = info.select('dd.chn > a')[0].text
-    hit = int(info.select('span.hit')[0].text[4:].replace(',', ''))
-    like = int(info.select('span.like')[0].text[5:].replace(',', ''))
+    chn = info.select_one('dd.chn > a').text
+    hit = int(info.select_one('span.hit').text[4:].replace(',', ''))
+    like = int(info.select_one('span.like').text[5:].replace(',', ''))
 
     if chn not in chnInfos.keys():
         chnInfos[chn] = {'hit': hit, 'like': like}
@@ -25,6 +25,7 @@ for info in infos:
 
 # for i in chnInfos.items():
 #     print(i)
+
 
 def sortKey(item):
     return item[1]['hit']

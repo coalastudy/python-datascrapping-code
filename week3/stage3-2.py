@@ -13,9 +13,9 @@ infos = html.select('.cds_info')
 chnInfos = {}
 
 for info in infos:
-    chn = info.select('dd.chn > a')[0].text
-    hit = int(info.select('span.hit')[0].text[4:].replace(',', ''))
-    like = int(info.select('span.like')[0].text[5:].replace(',', ''))
+    chn = info.select_one('dd.chn > a').text
+    hit = int(info.select_one('span.hit').text[4:].replace(',', ''))
+    like = int(info.select_one('span.like').text[5:].replace(',', ''))
 
     if chn in chnInfos.keys():
         chnInfos[chn]['hit'] += hit

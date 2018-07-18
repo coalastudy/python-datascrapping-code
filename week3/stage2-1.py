@@ -10,25 +10,18 @@ html = BeautifulSoup(raw, 'html.parser')
 
 infos = html.select('.cds_info')
 
-channels = []
-hits = []
-likes = []
+chnInfos = {}
 
 for info in infos:
-    chn = info.select('dd.chn > a')[0].text
-    hit = int(info.select('span.hit')[0].text[4:].replace(',', ''))
-    like = int(info.select('span.like')[0].text[5:].replace(',', ''))
+    chn = info.select_one('dd.chn > a').text
+    chnInfos[chn] = {'hit': 0, 'like': 0}
 
-    if chn in channels:
-        idx = channels.index(chn)
-        hits[idx] = hits[idx] + hit
-        likes[idx] = likes[idx] + like
+for info in infos:
+    chn = info.select_one('dd.chn > a').text
+    hit = int(info.select_one('span.hit').text[4:].replace(',', ''))
+    like = int(info.select_one('span.like').text[5:].replace(',', ''))
 
-    else:  # channels 배열 안에 현재 chn이 없다.
-        channels.append(chn)
-        hits.append(hit)
-        likes.append(like)
+    chnInfos[chn]['like'] += like
+    chnInfos[chn]['hit'] += hit
 
-for channel in channels:
-    idx = channels.index(channel)
-    print(channel, '/', hits[idx], '/', likes[idx])
+print(chnInfos)
