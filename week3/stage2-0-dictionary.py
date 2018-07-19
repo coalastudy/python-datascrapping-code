@@ -36,8 +36,11 @@ newchn = '꽃보다할배'
 newhit = 19400
 newlike = 2760
 
+# - 준비되지 않은 이름에 추가하면 오류
 chnInfos[newchn]['hit'] += 1300
 chnInfos[newchn]['like'] += 110
+
+# - 준비되지 않은 이름에는 dictionary 형태로 추가
 # chnInfos[newchn] = {'hit': newhit, 'like': newlike}
 
-print(chnInfos)
+# print(chnInfos)
