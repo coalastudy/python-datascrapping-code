@@ -1,6 +1,6 @@
-
+import requests
+from urllib import parse
 from bs4 import BeautifulSoup
-from urllib import request, parse
 import openpyxl
 
 # ----------------- 준비 -----------------
@@ -10,8 +10,8 @@ keyword = '아시안게임'
 period = '7'
 # pd: 1일 - 4, 1주 - 1, 1개월 - 2, 6개월 - 6, 1년 - 5, 1시간 - 7, 2시간 - 8, 3시간 - 9, 4시간 - 10, 5시간 - 11, 6시간 - 12
 
-req = request.Request('https://search.naver.com/search.naver?where=news&query=' + parse.quote(keyword) + '&pd=' + period + '&start=1', headers={'User-Agent': 'Mozilla/5.0'})
-raw = request.urlopen(req).read()
+req = requests.get('https://search.naver.com/search.naver?where=news&query=' + parse.quote(keyword) + '&pd=' + period + '&start=1', headers={'User-Agent': 'Mozilla/5.0'})
+raw = req.text
 html = BeautifulSoup(raw, 'html.parser')
 total = int(html.select_one('.all_my').text.split('/')[1][:-1].replace(',', '').strip())
 page = 1
@@ -19,9 +19,9 @@ page = 1
 # ----------------- 수집 -----------------
 
 while (page - 1) * 10 < total:
-    req = request.Request('https://search.naver.com/search.naver?where=news&query=' + parse.quote(keyword) + '&pd=' + period + '&start=' + str((page-1) * 10 + 1),
+    req = requests.get('https://search.naver.com/search.naver?where=news&query=' + parse.quote(keyword) + '&pd=' + period + '&start=' + str((page-1) * 10 + 1),
                           headers={'User-Agent': 'Mozilla/5.0'})
-    raw = request.urlopen(req).read()
+    raw = req.text
     html = BeautifulSoup(raw, 'html.parser')
     list = html.select('.type01 dl')
 

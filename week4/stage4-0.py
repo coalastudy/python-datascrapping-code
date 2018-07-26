@@ -1,14 +1,14 @@
-
-from urllib import request, parse
+import requests
+from urllib import parse
 from bs4 import BeautifulSoup
 
 page = 1
 
 while (page-1) * 10 < total :
-    req = request.Request(
+    req = requests.get(
         'https://search.naver.com/search.naver?&where=news&query=' + parse.quote('아시안게임') + '&start=' + str(page * 10 + 1) + '&pd=12',
         headers={'User-Agent': 'Mozilla/5.0'})
-    raw = request.urlopen(req).read()
+    raw = req.text
     html = BeautifulSoup(raw, 'html.parser')
 
     list = html.select('.type01 dl')
