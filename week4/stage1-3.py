@@ -9,20 +9,17 @@ html = BeautifulSoup(raw, 'html.parser')
 infos = html.select('.cds_info')
 chnInfos = {}
 
-dt = datetime.datetime.now()
-filename = 'TOP100_' + dt.strftime("%Y_%m_%d")
-f = open(filename + '.csv', 'w')
 
 for info in infos:
-    chn = info.select('dd.chn > a')[0].text
-    hit = int(info.select('span.hit')[0].text[4:].replace(',', ''))
-    like = int(info.select('span.like')[0].text[5:].replace(',', ''))
+    chn = info.select_one('dd.chn > a').text
+    hit = int(info.select_one('span.hit').text[4:].replace(',', ''))
+    like = int(info.select_one('span.like').text[5:].replace(',', ''))
 
-    if chn not in chnInfos.keys():
-        chnInfos[chn] = {'hit': hit, 'like': like}
-    else:
+    if chn in chnInfos.keys():
         chnInfos[chn]['hit'] += hit
         chnInfos[chn]['like'] += like
+    else:
+        chnInfos[chn] = {'hit': hit, 'like': like}
 
 
 def sortKey(item):
@@ -30,6 +27,10 @@ def sortKey(item):
 
 
 sortedList = sorted(chnInfos.items(), key=sortKey, reverse=True)
+
+dt = datetime.datetime.now()
+filename = 'TOP100_' + dt.strftime("%Y_%m_%d")
+f = open(filename + '.csv', 'w')
 
 for sortedInfo in sortedList:
     f.write(sortedInfo[0] + ',' + str(sortedInfo[1]['hit']) + '\n')

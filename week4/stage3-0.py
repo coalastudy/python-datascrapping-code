@@ -2,13 +2,18 @@
 from urllib import request, parse
 from bs4 import BeautifulSoup
 
-raw = request.urlopen('https://search.naver.com/search.naver?&where=news&query=' + parse.quote('아시안게임') + '&start=1')
-html = BeautifulSoup(raw, 'html.parser')
+for page in range(3):
+    req = request.Request(
+        'https://search.naver.com/search.naver?&where=news&query=' + parse.quote('아시안게임') + '&start=' + str(page * 10 + 1),
+        headers={'User-Agent': 'Mozilla/5.0'})
 
-list = html.select('.type01 dl')
+    raw = request.urlopen(req).read()
+    html = BeautifulSoup(raw, 'html.parser')
 
-for article in list:
-    journal = article.select_one('span._sp_each_source').text
-    title = article.select_one('dt').text
+    list = html.select('.type01 dl')
 
-    print(journal, title)
+    for article in list:
+        journal = article.select_one('span._sp_each_source').text
+        title = article.select_one('dt').text
+
+        print(journal, title)
