@@ -4,7 +4,8 @@ from bs4 import BeautifulSoup
 import time
 
 driver = webdriver.Chrome('./chromedriver')
-driver.get('https://www.naver.com/')
+# driver.get('https://www.naver.com/')
+driver.get('https://youtube.com')
 
 # driver.find_element_by_id('search').send_keys('프로듀스 48')
 # driver.find_element_by_id('search-icon-legacy').click()
