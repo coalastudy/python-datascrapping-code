@@ -6,9 +6,9 @@ import openpyxl
 wb = openpyxl.Workbook()
 ws = wb.active
 
-companyItems = {}
+priceRangeItems = {}
 
-for page in range(1, 3):
+for page in range(1, 10):
     req = requests.get('https://search.shopping.naver.com/search/category.nhn?cat_id=50001203&pagingSize=40&pagingIndex=' + str(page))
     raw = req.text
     html = BeautifulSoup(raw, 'html.parser')
@@ -22,7 +22,7 @@ for page in range(1, 3):
         name = info.select_one('a.tit').text.strip()
         price = info.select_one('span.price span.num')
         reload = price.attrs['data-reload-date']
-        price = price.text
+        price = int(price.text.replace(',', ''))
 
         try:
             star = info.select_one('span.etc span.star_graph span').attrs['style'][6:]
@@ -34,17 +34,19 @@ for page in range(1, 3):
 
         try:
             mall_name = mall.attrs['title']
-        except Exception as e:
+        except:
             mall_name = mall.text
 
         mall_name = mall_name.split(' ')[0]
 
-        if mall_name in companyItems.keys():
-            companyItems[mall_name].append({
+        priceRange = str(price // 10000) + '만원대'
+
+        if priceRange in priceRangeItems.keys():
+            priceRangeItems[priceRange].append({
                 'rank': rank, 'name': name, 'price': price, 'reload': reload, 'star': star, 'comments': comments, 'mall_name': mall_name
             })
         else:
-            companyItems[mall_name] = [{
+            priceRangeItems[priceRange] = [{
                 'rank': rank, 'name': name, 'price': price, 'reload': reload, 'star': star, 'comments': comments, 'mall_name': mall_name
             }]
         # print(rank, name, price, reload, star, comments, mall_name)
@@ -52,13 +54,13 @@ for page in range(1, 3):
 
 ws.append(['제조사', '순위', '품명', '최저가', '가격 갱신일', '만족도', '후기 수'])
 
-for companyItem in companyItems.items():
-    ws.append([companyItem[0]])
+for priceRangeItem in priceRangeItems.items():
+    ws.append([priceRangeItem[0]])
 
-    for item in companyItem[1]:
+    for item in priceRangeItem[1]:
         ws.append(['', item['rank'], item['name'], item['price'], item['reload'], item['star'], item['comments']])
 
     ws.append([])
 
 
-wb.save('mouse.xlsx')
+wb.save('mouse_price.xlsx')

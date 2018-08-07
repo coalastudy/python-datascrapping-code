@@ -3,12 +3,12 @@
 import requests
 from bs4 import BeautifulSoup
 
-
 req = requests.get('https://search.shopping.naver.com/search/category.nhn?cat_id=50001203&pagingSize=40&pagingIndex=1')
 raw = req.text
 html = BeautifulSoup(raw, 'html.parser')
 
 items = html.select('li._itemSection')
+
 
 for item in items:
     rank = int(item.attrs['data-expose-rank'])
