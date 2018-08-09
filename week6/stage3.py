@@ -23,6 +23,3 @@ for title in titles:
     print(translated)
     driver.find_element_by_css_selector('textarea#txtSource').clear()
     time.sleep(1)
-
-
-

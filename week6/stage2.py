@@ -2,7 +2,6 @@ import requests
 from bs4 import BeautifulSoup
 import openpyxl
 
-
 wb = openpyxl.Workbook()
 ws = wb.active
 
@@ -16,9 +15,9 @@ for page in range(1, 10):
     items = html.select('li._itemSection')
 
     for item in items:
-
         rank = int(item.attrs['data-expose-rank'])
         info = item.select_one('div.info')
+
         name = info.select_one('a.tit').text.strip()
         price = info.select_one('span.price span.num')
         reload = price.attrs['data-reload-date']
@@ -30,25 +29,23 @@ for page in range(1, 10):
             star = '-'
 
         comments = info.select_one('span.etc em').text
-        mall = item.select_one('div.info_mall > p.mall_txt > a.mall_img')
+        brand = item.select_one('div.info_mall > p.mall_txt > a.mall_img')
 
         try:
-            mall_name = mall.attrs['title']
+            brand = brand.attrs['title']
         except:
-            mall_name = mall.text
+            brand = brand.text
 
-        mall_name = mall_name.split(' ')[0]
+        brand = brand.split(' ')[0]
 
-        if mall_name in companyItems.keys():
-            companyItems[mall_name].append({
-                'rank': rank, 'name': name, 'price': price, 'reload': reload, 'star': star, 'comments': comments, 'mall_name': mall_name
+        if brand in companyItems.keys():
+            companyItems[brand].append({
+                'rank': rank, 'name': name, 'price': price, 'reload': reload, 'star': star, 'comments': comments, 'brand': brand
             })
         else:
-            companyItems[mall_name] = [{
-                'rank': rank, 'name': name, 'price': price, 'reload': reload, 'star': star, 'comments': comments, 'mall_name': mall_name
+            companyItems[brand] = [{
+                'rank': rank, 'name': name, 'price': price, 'reload': reload, 'star': star, 'comments': comments, 'brand': brand
             }]
-        # print(rank, name, price, reload, star, comments, mall_name)
-        # ws.append([rank, name, price, reload, star, comments, mall_name])
 
 ws.append(['제조사', '순위', '품명', '최저가', '가격 갱신일', '만족도', '후기 수'])
 
