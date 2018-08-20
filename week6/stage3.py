@@ -1,25 +1,46 @@
-
-import requests
-from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium import common
+from bs4 import BeautifulSoup
 import time
 
 driver = webdriver.Chrome('./chromedriver')
 
-req = requests.get('https://news.ycombinator.com/news?p=1')
-html = BeautifulSoup(req.text, 'html.parser')
+driver.get('https://map.naver.com/')
 
-titles = html.select('a.storylink')
+driver.find_element_by_id('search-input').send_keys('신촌 스터디룸')
 
-driver.get('https://papago.naver.com/')
+driver.find_element_by_css_selector('#header > div.sch > fieldset > button').click()
 
+page = 1
 
-for title in titles:
-    print(title.text)
-    driver.find_element_by_css_selector('textarea#txtSource').send_keys(title.text)
-    driver.find_element_by_css_selector('button#btnTranslate').click()
-    time.sleep(1)
-    translated = driver.find_element_by_css_selector('div#txtTarget').text
-    print(translated)
-    driver.find_element_by_css_selector('textarea#txtSource').clear()
+while True:
+    html = driver.page_source
+    soup = BeautifulSoup(html, 'html.parser')
+
+    list = soup.select('.lsnx_det')
+
+    for data in list:
+
+        try:
+            title = data.select_one('a').text
+            addr = data.select_one('.addr').text.replace('지번', '').strip()
+            tel = data.select_one('.tel').text.strip()
+
+        except:
+            tel = ''
+
+        finally:
+            print(title, '/', addr, '/', tel)
+
+    page = page + 1
+
+    try:
+        if page % 5 == 1:
+            driver.find_element_by_class_name('next').click()
+        else:
+            driver.find_element_by_xpath('//a[text()=' + str(page) + ']').click()
+
+    except common.exceptions.NoSuchElementException:
+        break
+
     time.sleep(1)

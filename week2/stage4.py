@@ -1,16 +1,34 @@
-import requests
-from bs4 import BeautifulSoup
 
-req = requests.get('https://tv.naver.com/r/')
+cities = ['서울', '인천', '수원', '성남', '대전', '원주', '대구', '김해', '군산', '경주', '청주']
 
-raw = req.text
+# print(cities[0] + ' 명소')
+# print(cities[1] + ' 명소')
+# print(cities[2] + ' 명소')
+# print(cities[3] + ' 명소')
+# print(cities[4] + ' 명소')
+# print(cities[5] + ' 명소')
+# print(cities[6] + ' 명소')
+# print(cities[7] + ' 명소')
+# print(cities[8] + ' 명소')
+# print(cities[9] + ' 명소')
+# print(cities[10] + ' 명소')
 
-html = BeautifulSoup(raw, 'html.parser')
+additional = '의 명소를 방문해보세요.'
 
-infos = html.select('div.cds')
+for city in cities:
+    print(city + additional)
+    print('-------------------------')
 
-first = infos[0]
 
-first_title = first.select_one('dt.title tooltip')
+cities.append('김포')
+cities.append('순천')
+print(cities)
 
-print('/', first_title.text, '/')
+cities.pop(2)
+print(cities)
+
+cities.reverse()
+print(cities)
+
+cities.sort()
+print(cities)

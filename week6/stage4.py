@@ -1,50 +1,49 @@
-
-import requests
-from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium import common
+from bs4 import BeautifulSoup
 import time
-import threading
 
-engKor = []
+driver = webdriver.Chrome('./chromedriver')
+driver2 = webdriver.Chrome('./chromedriver')
 
-def processMany(start, end):
-    driver = webdriver.Chrome('./chromedriver')
+driver.get('https://map.naver.com/')
 
-    for n in range(start, end + 1):
+driver.find_element_by_id('search-input').send_keys('신촌 스터디룸')
 
-        req = requests.get('https://news.ycombinator.com/news?p=' + str(n))
-        html = BeautifulSoup(req.text, 'html.parser')
+driver.find_element_by_css_selector('#header > div.sch > fieldset > button').click()
 
-        titles = html.select('a.storylink')
+page = 1
 
-        driver.get('https://papago.naver.com/')
+while True:
+    html = driver.page_source
+    soup = BeautifulSoup(html, 'html.parser')
 
+    list = soup.select('ul.lst_site > li')
 
-        for title in titles:
-            orig = title.text
-            driver.find_element_by_css_selector('textarea#txtSource').send_keys(title.text)
-            driver.find_element_by_css_selector('button#btnTranslate').click()
-            time.sleep(1)
-            translated = driver.find_element_by_css_selector('div#txtTarget').text
-            # print(orig, translated)
-            engKor.append([orig, translated])
-            driver.find_element_by_css_selector('textarea#txtSource').clear()
+    for data in list:
 
+        title = data.select_one('a').text
 
-start_time = time.time()
+        print(title)
 
-t1 = threading.Thread(target=processMany, args=(1, 2))
-t2 = threading.Thread(target=processMany, args=(3, 4))
-t3 = threading.Thread(target=processMany, args=(5, 6))
+        detail_url = data.select_one('a.spm_sw_detail').attrs['href']
+        driver2.get('https://map.naver.com' + detail_url)
+        times = driver2.find_elements_by_css_selector('.section_detail_time li')
+        for t in times:
+            print(t.text)
 
-t1.start()
-t2.start()
-t3.start()
+        print('---------------')
+        time.sleep(1)
 
-t1.join()
-t2.join()
-t3.join()
+    page = page + 1
 
-print(engKor)
+    try:
+        if page % 5 == 1:
+            driver.find_element_by_class_name('next').click()
+        else:
+            driver.find_element_by_xpath('//a[text()=' + str(page) + ']').click()
 
-print("--- %s seconds ---" % (time.time() - start_time))
+    except common.exceptions.NoSuchElementException:
+        break
+
+    time.sleep(1)
