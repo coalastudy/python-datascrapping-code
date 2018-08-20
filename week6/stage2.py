@@ -49,13 +49,3 @@ for data in list:
 #     finally:
 #         print(title, '/', addr, '/', tel)
 #
-
-
-# ---- 페이지 버튼 클릭하여 넘기기 ----
-
-# driver.find_element_by_xpath('//a[text()=' + str(2) + ']').click()
-# time.sleep(1)
-
-
-# driver.find_element_by_xpath('//a[text()="3"]').click()
-# driver.close()

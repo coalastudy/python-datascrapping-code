@@ -1,5 +1,4 @@
 from selenium import webdriver
-from selenium import common
 from bs4 import BeautifulSoup
 import time
 
@@ -40,7 +39,7 @@ while True:
         else:
             driver.find_element_by_xpath('//a[text()=' + str(page) + ']').click()
 
-    except common.exceptions.NoSuchElementException:
+    except:
         break
 
     time.sleep(1)
