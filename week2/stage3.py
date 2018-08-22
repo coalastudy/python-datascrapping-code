@@ -29,8 +29,10 @@ print(cities[1:-1]) # 두번째 ~ 끝에서 첫번째
 
 
 price = '가격 : 13,000 원'
-print(price[-14])
-# price = price[5:-2]
-# print(price)
+print(price)
+price = price[5:-2]
+print(price)
 
-hit = '조회 수 - 139.153회'
+hit = '조회 수 - 139,153회'
+
+print(hit[7:-1])
