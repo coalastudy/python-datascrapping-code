@@ -36,7 +36,7 @@ scores = {'h': 16, 'b': 24, 'd': 91, 'c': 138, 'z': 6, 'a': 65}
 # print(sorted(scores))
 # print(sorted(scores.keys()))
 # print(sorted(scores.values()))
-# print(sorted(scores.items()))
+print(sorted(scores.items()))
 
 
 # ---- 정렬 기준 바꾸어보기 ----

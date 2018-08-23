@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 
-
 req = requests.get('https://tv.naver.com/r/')
 
 raw = req.text
